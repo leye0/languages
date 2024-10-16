@@ -1755,8 +1755,8 @@
             chapter.phrases.forEach((phrase, phraseIndex) => {
                 const index = (phraseIndex + 1).toString().padStart(3, '0');
 
-                const russePath = `audio/chapter${chapterIndex + 1}/russian/${index}.mp3`;
-                const frenchPath = `audio/chapter${chapterIndex + 1}/french/${index}.mp3`;
+                const russePath = `Audio/Chapter${chapterIndex + 1}/Russian/${index}.mp3`;
+                const frenchPath = `Audio/Chapter${chapterIndex + 1}/French/${index}.mp3`;
 
                 const russePhrase = createPhraseElement(`${stringToSpans(phrase.russian, phraseIndex, chapterIndex)}`, 'phrase phrase--russe', russePath);
                 const frenchPhrase = createPhraseElement(`${phrase.french}`, 'phrase phrase--français', frenchPath);
