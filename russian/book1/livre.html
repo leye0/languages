@@ -1,0 +1,1777 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lecture Audio de Livre</title>
+    <style>
+        /* Même style CSS que précédemment */
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f4f4f9;
+            color: #333;
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+        }
+        h1 {
+            text-align: center;
+            color: #444;
+        }
+        .chapitre {
+            margin: 20px 0;
+            background-color: #fff;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 15px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+        .phrase {
+            display: flex;
+            align-items: center;
+            margin: 10px 0;
+        }
+        .phrase--russe {
+            background-color: #ffefcc;
+            padding: 10px;
+            border-radius: 5px;
+            margin-right: 10px;
+        }
+        .phrase--français {
+            background-color: #d0e6f5;
+            padding: 10px;
+            border-radius: 5px;
+            margin-bottom: 32px;
+        }
+        .s-word {
+            margin-right: 4px;
+        }
+        .floating-div {
+            position: absolute;
+            display: none;
+            background-color: #f1f1f1;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            z-index: 1000;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+        }
+        button {
+            margin-left: 10px;
+            padding: 5px 10px;
+            font-size: 16px;
+            border: none;
+            border-radius: 5px;
+            background-color: #333;
+            color: #fff;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        button:hover {
+            background-color: #555;
+        }
+    </style>
+</head>
+<body>
+        <div id="floatingDiv" class="floating-div">I am a floating div!</div>
+    <h1>Ponts Culturels : Un Voyage à Travers le Français et le Russe</h1>
+
+    <div id="chapters"></div>
+
+    <script>
+        const bookData = {
+          chapters: [
+                {
+      titleRussian: "Путешествие в Россию",
+      titleFrench: "Voyage en Russie",
+      phrases: [
+        {
+          russian: "Жан и Мари живут в Париже.",
+          french: "Jean et Marie vivent à Paris.",
+          words: [
+            { word: "Жан", translation: "Jean", type: "noun" },
+            { word: "Мари", translation: "Marie", type: "noun" },
+            { word: "живут", translation: "vivent", type: "verb" },
+            { word: "в", translation: "à", type: "preposition" },
+            { word: "Париже", translation: "Paris", type: "noun" }
+          ]
+        },
+        {
+          russian: "Они любят путешествия.",
+          french: "Ils aiment voyager.",
+          words: [
+            { word: "Они", translation: "Ils", type: "pronoun" },
+            { word: "любят", translation: "aiment", type: "verb" },
+            { word: "путешествия", translation: "voyager", type: "noun" }
+          ]
+        },
+        {
+          russian: "Однажды, они решают ехать в Россию.",
+          french: "Un jour, ils décident d'aller en Russie.",
+          words: [
+            { word: "Однажды", translation: "Un jour", type: "adverb" },
+            { word: "они", translation: "ils", type: "pronoun" },
+            { word: "решают", translation: "décident", type: "verb" },
+            { word: "ехать", translation: "aller", type: "verb" },
+            { word: "в", translation: "en", type: "preposition" },
+            { word: "Россию", translation: "Russie", type: "noun" }
+          ]
+        },
+        {
+          russian: "Они покупают билеты и пакуют чемоданы.",
+          french: "Ils achètent des billets et font leurs valises.",
+          words: [
+            { word: "Они", translation: "Ils", type: "pronoun" },
+            { word: "покупают", translation: "achètent", type: "verb" },
+            { word: "билеты", translation: "billets", type: "noun" },
+            { word: "и", translation: "et", type: "conjunction" },
+            { word: "пакуют", translation: "font", type: "verb" },
+            { word: "чемоданы", translation: "valises", type: "noun" }
+          ]
+        },
+        {
+          russian: "В Москве они видят Красную Площадь.",
+          french: "À Moscou, ils voient la Place Rouge.",
+          words: [
+            { word: "В", translation: "À", type: "preposition" },
+            { word: "Москве", translation: "Moscou", type: "noun" },
+            { word: "они", translation: "ils", type: "pronoun" },
+            { word: "видят", translation: "voient", type: "verb" },
+            { word: "Красную", translation: "Rouge", type: "adjective" },
+            { word: "Площадь", translation: "Place", type: "noun" }
+          ]
+        },
+        {
+          russian: "Жан говорит: «Это красиво!»",
+          french: "Jean dit : «C'est beau !»",
+          words: [
+            { word: "Жан", translation: "Jean", type: "noun" },
+            { word: "говорит", translation: "dit", type: "verb" },
+            { word: "Это", translation: "C'est", type: "pronoun" },
+            { word: "красиво", translation: "beau", type: "adjective" }
+          ]
+        },
+        {
+          russian: "Мари делает фото площади.",
+          french: "Marie prend une photo de la place.",
+          words: [
+            { word: "Мари", translation: "Marie", type: "noun" },
+            { word: "делает", translation: "prend", type: "verb" },
+            { word: "фото", translation: "photo", type: "noun" },
+            { word: "площади", translation: "place", type: "noun" }
+          ]
+        },
+        {
+          russian: "Они идут в кафе и пьют кофе.",
+          french: "Ils vont dans un café et boivent du café.",
+          words: [
+            { word: "Они", translation: "Ils", type: "pronoun" },
+            { word: "идут", translation: "vont", type: "verb" },
+            { word: "в", translation: "dans", type: "preposition" },
+            { word: "кафе", translation: "café", type: "noun" },
+            { word: "и", translation: "et", type: "conjunction" },
+            { word: "пьют", translation: "boivent", type: "verb" },
+            { word: "кофе", translation: "café", type: "noun" }
+          ]
+        },
+        {
+          russian: "Кофе горячий, и Жан радуется.",
+          french: "Le café est chaud, et Jean est ravi.",
+          words: [
+            { word: "Кофе", translation: "Le café", type: "noun" },
+            { word: "горячий", translation: "chaud", type: "adjective" },
+            { word: "и", translation: "et", type: "conjunction" },
+            { word: "Жан", translation: "Jean", type: "noun" },
+            { word: "радуется", translation: "est ravi", type: "verb" }
+          ]
+        },
+        {
+          russian: "Потом они идут в музей.",
+          french: "Puis ils vont au musée.",
+          words: [
+            { word: "Потом", translation: "Puis", type: "adverb" },
+            { word: "они", translation: "ils", type: "pronoun" },
+            { word: "идут", translation: "vont", type: "verb" },
+            { word: "в", translation: "au", type: "preposition" },
+            { word: "музей", translation: "musée", type: "noun" }
+          ]
+        },
+        {
+          russian: "В музее много картин.",
+          french: "Il y a beaucoup de peintures au musée.",
+          words: [
+            { word: "В", translation: "au", type: "preposition" },
+            { word: "музее", translation: "musée", type: "noun" },
+            { word: "много", translation: "beaucoup", type: "adverb" },
+            { word: "картин", translation: "peintures", type: "noun" }
+          ]
+        },
+        {
+          russian: "Мари любит искусство, и она смотрит каждую картину.",
+          french: "Marie aime l'art et regarde chaque peinture.",
+          words: [
+            { word: "Мари", translation: "Marie", type: "noun" },
+            { word: "любит", translation: "aime", type: "verb" },
+            { word: "искусство", translation: "art", type: "noun" },
+            { word: "и", translation: "et", type: "conjunction" },
+            { word: "она", translation: "elle", type: "pronoun" },
+            { word: "смотрит", translation: "regarde", type: "verb" },
+            { word: "каждую", translation: "chaque", type: "adjective" },
+            { word: "картину", translation: "peinture", type: "noun" }
+          ]
+        },
+                {
+          russian: "Жан любит скульптуры.",
+          french: "Jean aime les sculptures.",
+          words: [
+            { word: 'Жан', translation: 'Jean', type: 'proper noun' },
+            { word: 'любит', translation: 'aime', type: 'verb' },
+            { word: 'скульптуры', translation: 'sculptures', type: 'noun' }
+          ]
+        },
+        {
+          russian: "Он говорит: «Эти скульптуры велики!»",
+          french: "Il dit : «Ces sculptures sont magnifiques !»",
+          words: [
+            { word: 'Он', translation: 'Il', type: 'pronoun' },
+            { word: 'говорит', translation: 'dit', type: 'verb' },
+            { word: 'эти', translation: 'ces', type: 'demonstrative adjective' },
+            { word: 'скульптуры', translation: 'sculptures', type: 'noun' },
+            { word: 'велики', translation: 'magnifiques', type: 'adjective' }
+          ]
+        },
+        {
+          russian: "Они тоже гуляют по парку.",
+          french: "Ils se promènent aussi dans le parc.",
+          words: [
+            { word: 'Они', translation: 'Ils', type: 'pronoun' },
+            { word: 'тоже', translation: 'aussi', type: 'adverb' },
+            { word: 'гуляют', translation: 'se promènent', type: 'verb' },
+            { word: 'по', translation: 'dans', type: 'preposition' },
+            { word: 'парку', translation: 'parc', type: 'noun' }
+          ]
+        },
+        {
+          russian: "В парке зелёные деревья, и цветы пахнут хорошо.",
+          french: "Dans le parc, les arbres sont verts et les fleurs sentent bon.",
+          words: [
+            { word: 'В', translation: 'Dans', type: 'preposition' },
+            { word: 'парке', translation: 'parc', type: 'noun' },
+            { word: 'зелёные', translation: 'verts', type: 'adjective' },
+            { word: 'деревья', translation: 'arbres', type: 'noun' },
+            { word: 'и', translation: 'et', type: 'conjunction' },
+            { word: 'цветы', translation: 'fleurs', type: 'noun' },
+            { word: 'пахнут', translation: 'sentent', type: 'verb' },
+            { word: 'хорошо', translation: 'bon', type: 'adverb' }
+          ]
+        },
+        {
+          russian: "Жан и Мари сидят на скамье и отдыхают.",
+          french: "Jean et Marie s'assoient sur un banc et se reposent.",
+          words: [
+            { word: 'Жан', translation: 'Jean', type: 'proper noun' },
+            { word: 'и', translation: 'et', type: 'conjunction' },
+            { word: 'Мари', translation: 'Marie', type: 'proper noun' },
+            { word: 'сидят', translation: 's\'assoient', type: 'verb' },
+            { word: 'на', translation: 'sur', type: 'preposition' },
+            { word: 'скамье', translation: 'banc', type: 'noun' },
+            { word: 'отдыхают', translation: 'se reposent', type: 'verb' }
+          ]
+        },
+        {
+          russian: "Вечером они идут в ресторан.",
+          french: "Le soir, ils vont au restaurant.",
+          words: [
+            { word: 'Вечером', translation: 'Le soir', type: 'adverb' },
+            { word: 'они', translation: 'ils', type: 'pronoun' },
+            { word: 'идут', translation: 'vont', type: 'verb' },
+            { word: 'в', translation: 'au', type: 'preposition' },
+            { word: 'ресторан', translation: 'restaurant', type: 'noun' }
+          ]
+        },
+        {
+          russian: "Жан пробует борщ, а Мари берёт салат.",
+          french: "Jean essaie le bortsch, et Marie prend une salade.",
+          words: [
+            { word: 'Жан', translation: 'Jean', type: 'proper noun' },
+            { word: 'пробует', translation: 'essaie', type: 'verb' },
+            { word: 'борщ', translation: 'bortsch', type: 'noun' },
+            { word: 'а', translation: 'et', type: 'conjunction' },
+            { word: 'Мари', translation: 'Marie', type: 'proper noun' },
+            { word: 'берёт', translation: 'prend', type: 'verb' },
+            { word: 'салат', translation: 'salade', type: 'noun' }
+          ]
+        },
+        {
+          russian: "Еда вкусная, и они счастливы.",
+          french: "La nourriture est délicieuse, et ils sont heureux.",
+          words: [
+            { word: 'Еда', translation: 'nourriture', type: 'noun' },
+            { word: 'вкусная', translation: 'délicieuse', type: 'adjective' },
+            { word: 'и', translation: 'et', type: 'conjunction' },
+            { word: 'они', translation: 'ils', type: 'pronoun' },
+            { word: 'счастливы', translation: 'heureux', type: 'adjective' }
+          ]
+        },
+        {
+          russian: "После Москвы они едут на поезде в Санкт-Петербург.",
+          french: "Après Moscou, ils prennent le train pour Saint-Pétersbourg.",
+          words: [
+            { word: 'После', translation: 'Après', type: 'preposition' },
+            { word: 'Москвы', translation: 'Moscou', type: 'proper noun' },
+            { word: 'они', translation: 'ils', type: 'pronoun' },
+            { word: 'едут', translation: 'prennent', type: 'verb' },
+            { word: 'на', translation: 'en', type: 'preposition' },
+            { word: 'поезде', translation: 'train', type: 'noun' },
+            { word: 'в', translation: 'pour', type: 'preposition' },
+            { word: 'Санкт-Петербург', translation: 'Saint-Pétersbourg', type: 'proper noun' }
+          ]
+        },
+        {
+          russian: "В поезде они встречают Анну.",
+          french: "Dans le train, ils rencontrent Anna.",
+          words: [
+            { word: 'В', translation: 'Dans', type: 'preposition' },
+            { word: 'поезде', translation: 'train', type: 'noun' },
+            { word: 'они', translation: 'ils', type: 'pronoun' },
+            { word: 'встречают', translation: 'rencontrent', type: 'verb' },
+            { word: 'Анну', translation: 'Anna', type: 'proper noun' }
+          ]
+        },
+        {
+          russian: "Анна говорит по-английски, и они говорят всё путешествие.",
+          french: "Anna parle anglais, et ils discutent tout le trajet.",
+          words: [
+            { word: 'Анна', translation: 'Anna', type: 'proper noun' },
+            { word: 'говорит', translation: 'parle', type: 'verb' },
+            { word: 'по-английски', translation: 'anglais', type: 'adverb' },
+            { word: 'и', translation: 'et', type: 'conjunction' },
+            { word: 'они', translation: 'ils', type: 'pronoun' },
+            { word: 'говорят', translation: 'discutent', type: 'verb' },
+            { word: 'всё', translation: 'tout', type: 'adverb' },
+            { word: 'путешествие', translation: 'trajet', type: 'noun' }
+          ]
+        },
+        {
+          russian: "В Санкт-Петербурге они идут в Эрмитаж.",
+          french: "À Saint-Pétersbourg, ils vont à l'Ermitage.",
+          words: [
+            { word: 'В', translation: 'À', type: 'preposition' },
+            { word: 'Санкт-Петербурге', translation: 'Saint-Pétersbourg', type: 'proper noun' },
+            { word: 'они', translation: 'ils', type: 'pronoun' },
+            { word: 'идут', translation: 'vont', type: 'verb' },
+            { word: 'в', translation: 'à', type: 'preposition' },
+            { word: 'Эрмитаж', translation: 'l\'Ermitage', type: 'proper noun' }
+          ]
+        },
+        {
+          russian: "Мари снова делает много фото.",
+          french: "Marie prend encore beaucoup de photos.",
+          words: [
+            { word: 'Мари', translation: 'Marie', type: 'proper noun' },
+            { word: 'снова', translation: 'encore', type: 'adverb' },
+            { word: 'делает', translation: 'prend', type: 'verb' },
+            { word: 'много', translation: 'beaucoup', type: 'adverb' },
+            { word: 'фото', translation: 'photos', type: 'noun' }
+          ]
+        },
+        {
+          russian: "Жан говорит: «Этот музей большой!»",
+          french: "Jean dit : «Ce musée est immense !»",
+          words: [
+            { word: 'Жан', translation: 'Jean', type: 'proper noun' },
+            { word: 'говорит', translation: 'dit', type: 'verb' },
+            { word: 'этот', translation: 'ce', type: 'demonstrative adjective' },
+            { word: 'музей', translation: 'musée', type: 'noun' },
+            { word: 'большой', translation: 'immense', type: 'adjective' }
+          ]
+        },
+        {
+          russian: "Путешествие в Россию оставляет много хороших воспоминаний.",
+          french: "Le voyage en Russie laisse beaucoup de bons souvenirs.",
+          words: [
+            { word: 'Путешествие', translation: 'voyage', type: 'noun' },
+            { word: 'в', translation: 'en', type: 'preposition' },
+            { word: 'Россию', translation: 'Russie', type: 'proper noun' },
+            { word: 'оставляет', translation: 'laisse', type: 'verb' },
+            { word: 'много', translation: 'beaucoup', type: 'adverb' },
+            { word: 'хороших', translation: 'bons', type: 'adjective' },
+            { word: 'воспоминаний', translation: 'souvenirs', type: 'noun' }
+          ]
+        },
+        {
+          russian: "Жан и Мари возвращаются в Париж, но они хотят ехать в Россию снова.",
+          french: "Jean et Marie retournent à Paris, mais ils veulent revenir en Russie.",
+          words: [
+            { word: 'Жан', translation: 'Jean', type: 'proper noun' },
+            { word: 'и', translation: 'et', type: 'conjunction' },
+            { word: 'Мари', translation: 'Marie', type: 'proper noun' },
+            { word: 'возвращаются', translation: 'retournent', type: 'verb' },
+            { word: 'в', translation: 'à', type: 'preposition' },
+            { word: 'Париж', translation: 'Paris', type: 'proper noun' },
+            { word: 'но', translation: 'mais', type: 'conjunction' },
+            { word: 'они', translation: 'ils', type: 'pronoun' },
+            { word: 'хотят', translation: 'veulent', type: 'verb' },
+            { word: 'ехать', translation: 'revenir', type: 'verb' },
+            { word: 'в', translation: 'en', type: 'preposition' },
+            { word: 'Россию', translation: 'Russie', type: 'proper noun' },
+            { word: 'снова', translation: 'encore', type: 'adverb' }
+          ]
+        }
+              ]
+            },
+            {
+              titleFrench: "Apprendre le russe",
+              titleRussian: "Изучение русского языка",
+              phrases: [
+                                {
+                    russian: "После возвращения в Париж Жан и Мари решают учить русский язык.",
+                    french: "Après leur retour à Paris, Jean et Marie décident d'apprendre le russe.",
+                    words: [
+                        { word: 'После', translation: 'Après', type: 'adverbe' },
+                        { word: 'возвращения', translation: 'retour', type: 'nom' },
+                        { word: 'в', translation: 'à', type: 'préposition' },
+                        { word: 'Париж', translation: 'Paris', type: 'nom propre' },
+                        { word: 'Жан', translation: 'Jean', type: 'nom propre' },
+                        { word: 'и', translation: 'et', type: 'conjonction' },
+                        { word: 'Мари', translation: 'Marie', type: 'nom propre' },
+                        { word: 'решают', translation: 'décident', type: 'verbe' },
+                        { word: 'учить', translation: 'apprendre', type: 'verbe' },
+                        { word: 'русский', translation: 'russe', type: 'adjectif' },
+                        { word: 'язык', translation: 'langue', type: 'nom' }
+                    ]
+                },
+                {
+                    russian: "Каждый день они делают час уроков.",
+                    french: "Chaque jour, ils font une heure de cours.",
+                    words: [
+                        { word: 'Каждый', translation: 'Chaque', type: 'adjectif' },
+                        { word: 'день', translation: 'jour', type: 'nom' },
+                        { word: 'они', translation: 'ils', type: 'pronom' },
+                        { word: 'делают', translation: 'font', type: 'verbe' },
+                        { word: 'час', translation: 'heure', type: 'nom' },
+                        { word: 'уроков', translation: 'cours', type: 'nom' }
+                    ]
+                },
+                {
+                    russian: "Жан находит грамматику немного сложной, но Мари помогает ему.",
+                    french: "Jean trouve la grammaire un peu compliquée, mais Marie l'aide.",
+                    words: [
+                        { word: 'Жан', translation: 'Jean', type: 'nom propre' },
+                        { word: 'находит', translation: 'trouve', type: 'verbe' },
+                        { word: 'грамматику', translation: 'grammaire', type: 'nom' },
+                        { word: 'немного', translation: 'un peu', type: 'adverbe' },
+                        { word: 'сложной', translation: 'compliquée', type: 'adjectif' },
+                        { word: 'но', translation: 'mais', type: 'conjonction' },
+                        { word: 'Мари', translation: 'Marie', type: 'nom propre' },
+                        { word: 'помогает', translation: 'aide', type: 'verbe' },
+                        { word: 'ему', translation: 'lui', type: 'pronom' }
+                    ]
+                },
+                {
+                    russian: "Они покупают книги и смотрят фильмы на русском языке.",
+                    french: "Ils achètent des livres et regardent des films en russe.",
+                    words: [
+                        { word: 'Они', translation: 'Ils', type: 'pronom' },
+                        { word: 'покупают', translation: 'achètent', type: 'verbe' },
+                        { word: 'книги', translation: 'livres', type: 'nom' },
+                        { word: 'и', translation: 'et', type: 'conjonction' },
+                        { word: 'смотрят', translation: 'regardent', type: 'verbe' },
+                        { word: 'фильмы', translation: 'films', type: 'nom' },
+                        { word: 'на', translation: 'en', type: 'préposition' },
+                        { word: 'русском', translation: 'russe', type: 'adjectif' },
+                        { word: 'языке', translation: 'langue', type: 'nom' }
+                    ]
+                },
+                {
+                    russian: "Мари любит кино, и она предлагает смотреть фильм каждый вечер.",
+                    french: "Marie aime le cinéma, et elle propose de regarder un film chaque soir.",
+                    words: [
+                        { word: 'Мари', translation: 'Marie', type: 'nom propre' },
+                        { word: 'любит', translation: 'aime', type: 'verbe' },
+                        { word: 'кино', translation: 'cinéma', type: 'nom' },
+                        { word: 'и', translation: 'et', type: 'conjonction' },
+                        { word: 'она', translation: 'elle', type: 'pronom' },
+                        { word: 'предлагает', translation: 'propose', type: 'verbe' },
+                        { word: 'смотреть', translation: 'regarder', type: 'verbe' },
+                        { word: 'фильм', translation: 'film', type: 'nom' },
+                        { word: 'каждый', translation: 'chaque', type: 'adjectif' },
+                        { word: 'вечер', translation: 'soir', type: 'nom' }
+                    ]
+                },
+                {
+                    russian: "Жан соглашается, потому что фильмы помогают ему лучше понимать язык.",
+                    french: "Jean accepte, car les films l'aident à mieux comprendre la langue.",
+                    words: [
+                        { word: 'Жан', translation: 'Jean', type: 'nom propre' },
+                        { word: 'соглашается', translation: 'accepte', type: 'verbe' },
+                        { word: 'потому что', translation: 'car', type: 'conjonction' },
+                        { word: 'фильмы', translation: 'films', type: 'nom' },
+                        { word: 'помогают', translation: 'aident', type: 'verbe' },
+                        { word: 'ему', translation: 'lui', type: 'pronom' },
+                        { word: 'лучше', translation: 'mieux', type: 'adverbe' },
+                        { word: 'понимать', translation: 'comprendre', type: 'verbe' },
+                        { word: 'язык', translation: 'langue', type: 'nom' }
+                    ]
+                },
+                {
+                    russian: "Однажды они встречают Алексея, студента из России.",
+                    french: "Un jour, ils rencontrent Alexei, un étudiant de Russie.",
+                    words: [
+                        { word: 'Однажды', translation: 'Un jour', type: 'adverbe' },
+                        { word: 'они', translation: 'ils', type: 'pronom' },
+                        { word: 'встречают', translation: 'rencontrent', type: 'verbe' },
+                        { word: 'Алексея', translation: 'Alexei', type: 'nom propre' },
+                        { word: 'студента', translation: 'étudiant', type: 'nom' },
+                        { word: 'из', translation: 'de', type: 'préposition' },
+                        { word: 'России', translation: 'Russie', type: 'nom propre' }
+                    ]
+                },
+                {
+                    russian: "Алексей учится в университете в Париже.",
+                    french: "Alexei étudie à l'université à Paris.",
+                    words: [
+                        { word: 'Алексей', translation: 'Alexei', type: 'nom propre' },
+                        { word: 'учится', translation: 'étudie', type: 'verbe' },
+                        { word: 'в', translation: 'à', type: 'préposition' },
+                        { word: 'университете', translation: 'université', type: 'nom' },
+                        { word: 'в', translation: 'à', type: 'préposition' },
+                        { word: 'Париже', translation: 'Paris', type: 'nom propre' }
+                    ]
+                },
+                {
+                    russian: "Он говорит: «Я могу помочь вам с русским языком».",
+                    french: "Il dit : «Je peux vous aider avec le russe».",
+                    words: [
+                        { word: 'Он', translation: 'Il', type: 'pronom' },
+                        { word: 'говорит', translation: 'dit', type: 'verbe' },
+                        { word: 'Я', translation: 'Je', type: 'pronom' },
+                        { word: 'могу', translation: 'peux', type: 'verbe' },
+                        { word: 'помочь', translation: 'aider', type: 'verbe' },
+                        { word: 'вам', translation: 'vous', type: 'pronom' },
+                        { word: 'с', translation: 'avec', type: 'préposition' },
+                        { word: 'русским', translation: 'russe', type: 'adjectif' },
+                        { word: 'языком', translation: 'langue', type: 'nom' }
+                    ]
+                },
+                {
+                    russian: "Жан и Мари рады новой дружбе.",
+                    french: "Jean et Marie sont heureux de cette nouvelle amitié.",
+                    words: [
+                        { word: 'Жан', translation: 'Jean', type: 'nom propre' },
+                        { word: 'и', translation: 'et', type: 'conjonction' },
+                        { word: 'Мари', translation: 'Marie', type: 'nom propre' },
+                        { word: 'рады', translation: 'heureux', type: 'adjectif' },
+                        { word: 'новой', translation: 'nouvelle', type: 'adjectif' },
+                        { word: 'дружбе', translation: 'amitié', type: 'nom' }
+                    ]
+                },
+                {
+                    russian: "Каждый вторник они приглашают Алексея на ужин.",
+                    french: "Tous les mardis, ils invitent Alexei à dîner.",
+                    words: [
+                        { word: 'Каждый', translation: 'Chaque', type: 'adjectif' },
+                        { word: 'вторник', translation: 'mardi', type: 'nom' },
+                        { word: 'они', translation: 'ils', type: 'pronom' },
+                        { word: 'приглашают', translation: 'invitent', type: 'verbe' },
+                        { word: 'Алексея', translation: 'Alexei', type: 'nom propre' },
+                        { word: 'на', translation: 'à', type: 'préposition' },
+                        { word: 'ужин', translation: 'dîner', type: 'nom' }
+                    ]
+                },
+                {
+                    russian: "Они говорят о книгах, фильмах и культуре.",
+                    french: "Ils parlent de livres, de films et de culture.",
+                    words: [
+                        { word: 'Они', translation: 'Ils', type: 'pronom' },
+                        { word: 'говорят', translation: 'parlent', type: 'verbe' },
+                        { word: 'о', translation: 'de', type: 'préposition' },
+                        { word: 'книгах', translation: 'livres', type: 'nom' },
+                        { word: 'фильмах', translation: 'films', type: 'nom' },
+                        { word: 'и', translation: 'et', type: 'conjonction' },
+                        { word: 'культуре', translation: 'culture', type: 'nom' }
+                    ]
+                },
+                {
+                    russian: "Мари готовит французские блюда, а Алексей учит их готовить русские блюда.",
+                    french: "Marie prépare des plats français, et Alexei leur apprend à cuisiner des plats russes.",
+                    words: [
+                        { word: 'Мари', translation: 'Marie', type: 'nom propre' },
+                        { word: 'готовит', translation: 'prépare', type: 'verbe' },
+                        { word: 'французские', translation: 'français', type: 'adjectif' },
+                        { word: 'блюда', translation: 'plats', type: 'nom' },
+                        { word: 'а', translation: 'et', type: 'conjonction' },
+                        { word: 'Алексей', translation: 'Alexei', type: 'nom propre' },
+                        { word: 'учит', translation: 'apprend', type: 'verbe' },
+                        { word: 'их', translation: 'leur', type: 'pronom' },
+                        { word: 'готовить', translation: 'cuisiner', type: 'verbe' },
+                        { word: 'русские', translation: 'russe', type: 'adjectif' },
+                        { word: 'блюда', translation: 'plats', type: 'nom' }
+                    ]
+                },
+                {
+                    russian: "Жан говорит: «Блинчики вкусные!»",
+                    french: "Jean dit : «Les blinis sont délicieux !»",
+                    words: [
+                        { word: 'Жан', translation: 'Jean', type: 'nom propre' },
+                        { word: 'говорит', translation: 'dit', type: 'verbe' },
+                        { word: 'Блинчики', translation: 'blinis', type: 'nom' },
+                        { word: 'вкусные', translation: 'délicieux', type: 'adjectif' }
+                    ]
+                },
+                {
+                    russian: "С помощью Алексея Жан и Мари узнают больше о России.",
+                    french: "Avec l'aide d'Alexei, Jean et Marie en apprennent plus sur la Russie.",
+                    words: [
+                        { word: 'С помощью', translation: 'Avec l aide', type: 'préposition' },
+                        { word: 'Алексея', translation: 'Alexei', type: 'nom propre' },
+                        { word: 'Жан', translation: 'Jean', type: 'nom propre' },
+                        { word: 'и', translation: 'et', type: 'conjonction' },
+                        { word: 'Мари', translation: 'Marie', type: 'nom propre' },
+                        { word: 'узнают', translation: 'apprennent', type: 'verbe' },
+                        { word: 'больше', translation: 'plus', type: 'adverbe' },
+                        { word: 'о', translation: 'sur', type: 'préposition' },
+                        { word: 'России', translation: 'Russie', type: 'nom propre' }
+                    ]
+                },
+                        {
+          russian: "Они учат традиции и обычаи.",
+          french: "Ils apprennent les traditions et les coutumes.",
+          words: [
+            { word: "Они", translation: "Ils", type: "pronoun" },
+            { word: "учат", translation: "apprennent", type: "verb" },
+            { word: "традиции", translation: "traditions", type: "noun" },
+            { word: "и", translation: "et", type: "conjunction" },
+            { word: "обычаи", translation: "coutumes", type: "noun" },
+          ],
+        },
+        {
+          russian: "Алексей рассказывает о русских праздниках.",
+          french: "Alexei parle des fêtes russes.",
+          words: [
+            { word: "Алексей", translation: "Alexei", type: "proper noun" },
+            { word: "рассказывает", translation: "parle", type: "verb" },
+            { word: "о", translation: "de", type: "preposition" },
+            { word: "русских", translation: "russes", type: "adjective" },
+            { word: "праздниках", translation: "fêtes", type: "noun" },
+          ],
+        },
+        {
+          russian: "Скоро Жан и Мари начинают говорить по-русски лучше.",
+          french: "Bientôt, Jean et Marie commencent à mieux parler russe.",
+          words: [
+            { word: "Скоро", translation: "Bientôt", type: "adverb" },
+            { word: "Жан", translation: "Jean", type: "proper noun" },
+            { word: "и", translation: "et", type: "conjunction" },
+            { word: "Мари", translation: "Marie", type: "proper noun" },
+            { word: "начинают", translation: "commencent", type: "verb" },
+            { word: "говорить", translation: "parler", type: "verb" },
+            { word: "по-русски", translation: "russe", type: "adverb" },
+            { word: "лучше", translation: "mieux", type: "adverb" },
+          ],
+        },
+        {
+          russian: "Они пишут маленькие тексты и пробуют читать русские новости.",
+          french: "Ils écrivent de petits textes et essaient de lire les nouvelles en russe.",
+          words: [
+            { word: "Они", translation: "Ils", type: "pronoun" },
+            { word: "пишут", translation: "écrivent", type: "verb" },
+            { word: "маленькие", translation: "petits", type: "adjective" },
+            { word: "тексты", translation: "textes", type: "noun" },
+            { word: "и", translation: "et", type: "conjunction" },
+            { word: "пробуют", translation: "essaient", type: "verb" },
+            { word: "читать", translation: "lire", type: "verb" },
+            { word: "русские", translation: "russes", type: "adjective" },
+            { word: "новости", translation: "nouvelles", type: "noun" },
+          ],
+        },
+        {
+          russian: "Жан радуется прогрессу и говорит: «Теперь мы готовы к новому путешествию в Россию».",
+          french: "Jean est heureux de ses progrès et dit : «Nous sommes maintenant prêts pour un nouveau voyage en Russie».",
+          words: [
+            { word: "Жан", translation: "Jean", type: "proper noun" },
+            { word: "радуется", translation: "est heureux", type: "verb" },
+            { word: "прогрессу", translation: "progrès", type: "noun" },
+            { word: "и", translation: "et", type: "conjunction" },
+            { word: "говорит", translation: "dit", type: "verb" },
+            { word: "Теперь", translation: "maintenant", type: "adverb" },
+            { word: "мы", translation: "nous", type: "pronoun" },
+            { word: "готовы", translation: "prêts", type: "adjective" },
+            { word: "к", translation: "pour", type: "preposition" },
+            { word: "новому", translation: "nouveau", type: "adjective" },
+            { word: "путешествию", translation: "voyage", type: "noun" },
+            { word: "в", translation: "en", type: "preposition" },
+            { word: "Россию", translation: "Russie", type: "proper noun" },
+          ],
+        },
+        {
+          russian: "Мари соглашается и предлагает сделать это следующим летом.",
+          french: "Marie est d'accord et propose de le faire l'été prochain.",
+          words: [
+            { word: "Мари", translation: "Marie", type: "proper noun" },
+            { word: "соглашается", translation: "est d'accord", type: "verb" },
+            { word: "и", translation: "et", type: "conjunction" },
+            { word: "предлагает", translation: "propose", type: "verb" },
+            { word: "сделать", translation: "faire", type: "verb" },
+            { word: "это", translation: "le", type: "pronoun" },
+            { word: "следующим", translation: "prochain", type: "adjective" },
+            { word: "летом", translation: "été", type: "noun" },
+          ],
+        },
+        {
+          russian: "Они планируют новый маршрут, и Жан добавляет: «Мы обязательно увидим другие города и природу России».",
+          french: "Ils planifient un nouvel itinéraire, et Jean ajoute : «Nous verrons certainement d'autres villes et la nature de la Russie».",
+          words: [
+            { word: "Они", translation: "Ils", type: "pronoun" },
+            { word: "планируют", translation: "planifient", type: "verb" },
+            { word: "новый", translation: "nouvel", type: "adjective" },
+            { word: "маршрут", translation: "itinéraire", type: "noun" },
+            { word: "и", translation: "et", type: "conjunction" },
+            { word: "Жан", translation: "Jean", type: "proper noun" },
+            { word: "добавляет", translation: "ajoute", type: "verb" },
+            { word: "Мы", translation: "Nous", type: "pronoun" },
+            { word: "обязательно", translation: "certainement", type: "adverb" },
+            { word: "увидим", translation: "verrons", type: "verb" },
+            { word: "другие", translation: "d'autres", type: "adjective" },
+            { word: "города", translation: "villes", type: "noun" },
+            { word: "и", translation: "et", type: "conjunction" },
+            { word: "природу", translation: "la nature", type: "noun" },
+            { word: "России", translation: "Russie", type: "proper noun" },
+          ],
+        }
+              ]
+            },
+            {
+              titleFrench: "Retour en Russie",
+              titleRussian: "Возвращение в Россию",
+              phrases: [
+                {
+          russian: "Летом Жан и Мари снова едут в Россию.",
+          french: "En été, Jean et Marie retournent en Russie.",
+          words: [
+            { word: "Летом", translation: "En été", type: "adverbe" },
+            { word: "Жан", translation: "Jean", type: "nom propre" },
+            { word: "Мари", translation: "Marie", type: "nom propre" },
+            { word: "снова", translation: "de nouveau", type: "adverbe" },
+            { word: "едут", translation: "vont", type: "verbe" },
+            { word: "в", translation: "en", type: "préposition" },
+            { word: "Россию", translation: "Russie", type: "nom propre" },
+          ],
+        },
+        {
+          russian: "В этот раз они видят несколько городов.",
+          french: "Cette fois, ils visitent plusieurs villes.",
+          words: [
+            { word: "В", translation: "Cette", type: "préposition" },
+            { word: "этот", translation: "fois", type: "adjectif démonstratif" },
+            { word: "раз", translation: "", type: "nom" },
+            { word: "они", translation: "ils", type: "pronom" },
+            { word: "видят", translation: "visitent", type: "verbe" },
+            { word: "несколько", translation: "plusieurs", type: "adverbe" },
+            { word: "городов", translation: "villes", type: "nom" },
+          ],
+        },
+        {
+          russian: "Их первое место — город Казань.",
+          french: "Leur première destination est la ville de Kazan.",
+          words: [
+            { word: "Их", translation: "Leur", type: "pronom possessif" },
+            { word: "первое", translation: "premier", type: "adjectif ordinal" },
+            { word: "место", translation: "lieu", type: "nom" },
+            { word: "город", translation: "ville", type: "nom" },
+            { word: "Казань", translation: "Kazan", type: "nom propre" },
+          ],
+        },
+        {
+          russian: "Жан читает о Казани в интернете и говорит: «Интересный город с большой историей».",
+          french: "Jean lit sur Kazan sur Internet et dit : «Une ville intéressante avec une grande histoire».",
+          words: [
+            { word: "Жан", translation: "Jean", type: "nom propre" },
+            { word: "читает", translation: "lit", type: "verbe" },
+            { word: "о", translation: "sur", type: "préposition" },
+            { word: "Казани", translation: "Kazan", type: "nom propre" },
+            { word: "в", translation: "dans", type: "préposition" },
+            { word: "интернете", translation: "Internet", type: "nom" },
+            { word: "и", translation: "et", type: "conjonction" },
+            { word: "говорит", translation: "dit", type: "verbe" },
+            { word: "Интересный", translation: "intéressant", type: "adjectif" },
+            { word: "город", translation: "ville", type: "nom" },
+            { word: "с", translation: "avec", type: "préposition" },
+            { word: "большой", translation: "grand", type: "adjectif" },
+            { word: "историей", translation: "histoire", type: "nom" },
+          ],
+        },
+        {
+          russian: "Когда они приезжают, они сразу идут гулять.",
+          french: "Quand ils arrivent, ils partent immédiatement se promener.",
+          words: [
+            { word: "Когда", translation: "Quand", type: "conjonction" },
+            { word: "они", translation: "ils", type: "pronom" },
+            { word: "приезжают", translation: "arrivent", type: "verbe" },
+            { word: "сразу", translation: "immédiatement", type: "adverbe" },
+            { word: "идут", translation: "vont", type: "verbe" },
+            { word: "гулять", translation: "se promener", type: "verbe" },
+          ],
+        },
+        {
+          russian: "В Казани красивые здания.",
+          french: "À Kazan, les bâtiments sont beaux.",
+          words: [
+            { word: "В", translation: "À", type: "préposition" },
+            { word: "Казани", translation: "Kazan", type: "nom propre" },
+            { word: "красивые", translation: "beaux", type: "adjectif" },
+            { word: "здания", translation: "bâtiments", type: "nom" },
+          ],
+        },
+        {
+          russian: "Мари делает фото старинных зданий.",
+          french: "Marie prend des photos des bâtiments anciens.",
+          words: [
+            { word: "Мари", translation: "Marie", type: "nom propre" },
+            { word: "делает", translation: "prend", type: "verbe" },
+            { word: "фото", translation: "photos", type: "nom" },
+            { word: "старинных", translation: "anciens", type: "adjectif" },
+            { word: "зданий", translation: "bâtiments", type: "nom" },
+          ],
+        },
+        {
+          russian: "Они слушают уличных музыкантов и пробуют местный чай.",
+          french: "Ils écoutent des musiciens de rue et goûtent le thé local.",
+          words: [
+            { word: "Они", translation: "Ils", type: "pronom" },
+            { word: "слушают", translation: "écoutent", type: "verbe" },
+            { word: "уличных", translation: "de rue", type: "adjectif" },
+            { word: "музыкантов", translation: "musiciens", type: "nom" },
+            { word: "и", translation: "et", type: "conjonction" },
+            { word: "пробуют", translation: "goûtent", type: "verbe" },
+            { word: "местный", translation: "local", type: "adjectif" },
+            { word: "чай", translation: "thé", type: "nom" },
+          ],
+        },
+        {
+          russian: "На следующий день они идут в Кремль.",
+          french: "Le lendemain, ils vont au Kremlin.",
+          words: [
+            { word: "На", translation: "Le", type: "préposition" },
+            { word: "следующий", translation: "prochain", type: "adjectif" },
+            { word: "день", translation: "jour", type: "nom" },
+            { word: "они", translation: "ils", type: "pronom" },
+            { word: "идут", translation: "vont", type: "verbe" },
+            { word: "в", translation: "à", type: "préposition" },
+            { word: "Кремль", translation: "Kremlin", type: "nom" },
+          ],
+        },
+        {
+          russian: "Мари восхищается башнями и соборами.",
+          french: "Marie admire les tours et les cathédrales.",
+          words: [
+            { word: "Мари", translation: "Marie", type: "nom propre" },
+            { word: "восхищается", translation: "admire", type: "verbe" },
+            { word: "башнями", translation: "tours", type: "nom" },
+            { word: "и", translation: "et", type: "conjonction" },
+            { word: "соборами", translation: "cathédrales", type: "nom" },
+          ],
+        },
+        {
+          russian: "Жан говорит: «Вид отсюда потрясающий!»",
+          french: "Jean dit : «La vue d'ici est stupéfiante !»",
+          words: [
+            { word: "Жан", translation: "Jean", type: "nom propre" },
+            { word: "говорит", translation: "dit", type: "verbe" },
+            { word: "Вид", translation: "Vue", type: "nom" },
+            { word: "отсюда", translation: "d'ici", type: "adverbe" },
+            { word: "потрясающий", translation: "stupéfiante", type: "adjectif" },
+          ],
+        },
+        {
+          russian: "Они продолжают своё путешествие и едут в Сочи.",
+          french: "Ils poursuivent leur voyage et vont à Sotchi.",
+          words: [
+            { word: "Они", translation: "Ils", type: "pronom" },
+            { word: "продолжают", translation: "poursuivent", type: "verbe" },
+            { word: "своё", translation: "leur", type: "pronom possessif" },
+            { word: "путешествие", translation: "voyage", type: "nom" },
+            { word: "и", translation: "et", type: "conjonction" },
+            { word: "едут", translation: "vont", type: "verbe" },
+            { word: "в", translation: "à", type: "préposition" },
+            { word: "Сочи", translation: "Sotchi", type: "nom propre" },
+          ],
+        },
+        {
+          russian: "Сочи — город у Чёрного моря.",
+          french: "Sotchi est une ville sur la mer Noire.",
+          words: [
+            { word: "Сочи", translation: "Sotchi", type: "nom propre" },
+            { word: "город", translation: "ville", type: "nom" },
+            { word: "у", translation: "près", type: "préposition" },
+            { word: "Чёрного", translation: "Noire", type: "adjectif" },
+            { word: "моря", translation: "mer", type: "nom" },
+          ],
+        },
+        {
+          russian: "Они почти каждый день на пляже.",
+          french: "Ils sont presque tous les jours à la plage.",
+          words: [
+            { word: "Они", translation: "Ils", type: "pronom" },
+            { word: "почти", translation: "presque", type: "adverbe" },
+            { word: "каждый", translation: "tout", type: "adjectif" },
+            { word: "день", translation: "jour", type: "nom" },
+            { word: "на", translation: "à", type: "préposition" },
+            { word: "пляже", translation: "plage", type: "nom" },
+          ],
+        },
+                {
+          russian: "Жан купается в море, а Мари читает книгу под зонтом.",
+          french: "Jean nage dans la mer, et Marie lit un livre sous un parasol.",
+          words: [
+            { word: "Жан", translation: "Jean", type: "nom" },
+            { word: "купается", translation: "nager", type: "verbe" },
+            { word: "море", translation: "mer", type: "nom" },
+            { word: "Мари", translation: "Marie", type: "nom" },
+            { word: "читает", translation: "lit", type: "verbe" },
+            { word: "книгу", translation: "livre", type: "nom" },
+            { word: "зонтом", translation: "parasol", type: "nom" }
+          ]
+        },
+        {
+          russian: "Один вечер они решают идти на концерт.",
+          french: "Un soir, ils décident d'aller à un concert.",
+          words: [
+            { word: "Один", translation: "Un", type: "adjectif" },
+            { word: "вечер", translation: "soir", type: "nom" },
+            { word: "они", translation: "ils", type: "pronom" },
+            { word: "решают", translation: "décident", type: "verbe" },
+            { word: "идти", translation: "aller", type: "verbe" },
+            { word: "концерт", translation: "concert", type: "nom" }
+          ]
+        },
+        {
+          russian: "Музыка весёлая, и Мари танцует.",
+          french: "La musique est joyeuse, et Marie danse.",
+          words: [
+            { word: "Музыка", translation: "musique", type: "nom" },
+            { word: "весёлая", translation: "joyeuse", type: "adjectif" },
+            { word: "Мари", translation: "Marie", type: "nom" },
+            { word: "танцует", translation: "danse", type: "verbe" }
+          ]
+        },
+        {
+          russian: "Жан улыбается и радуется атмосфере.",
+          french: "Jean sourit et profite de l'ambiance.",
+          words: [
+            { word: "Жан", translation: "Jean", type: "nom" },
+            { word: "улыбается", translation: "sourit", type: "verbe" },
+            { word: "радуется", translation: "profite", type: "verbe" },
+            { word: "атмосфере", translation: "ambiance", type: "nom" }
+          ]
+        },
+        {
+          russian: "После Сочи они едут в Новосибирск.",
+          french: "Après Sotchi, ils vont à Novossibirsk.",
+          words: [
+            { word: "После", translation: "Après", type: "préposition" },
+            { word: "Сочи", translation: "Sotchi", type: "nom" },
+            { word: "они", translation: "ils", type: "pronom" },
+            { word: "едут", translation: "vont", type: "verbe" },
+            { word: "Новосибирск", translation: "Novossibirsk", type: "nom" }
+          ]
+        },
+        {
+          russian: "Это большой город в Сибири.",
+          french: "C'est une grande ville en Sibérie.",
+          words: [
+            { word: "Это", translation: "C'est", type: "pronom" },
+            { word: "большой", translation: "grande", type: "adjectif" },
+            { word: "город", translation: "ville", type: "nom" },
+            { word: "Сибири", translation: "Sibérie", type: "nom" }
+          ]
+        },
+        {
+          russian: "Жан любит науку и хочет увидеть местный зоопарк.",
+          french: "Jean aime la science et veut voir le zoo local.",
+          words: [
+            { word: "Жан", translation: "Jean", type: "nom" },
+            { word: "любит", translation: "aime", type: "verbe" },
+            { word: "науку", translation: "science", type: "nom" },
+            { word: "хочет", translation: "veut", type: "verbe" },
+            { word: "увидеть", translation: "voir", type: "verbe" },
+            { word: "местный", translation: "local", type: "adjectif" },
+            { word: "зоопарк", translation: "zoo", type: "nom" }
+          ]
+        },
+        {
+          russian: "В зоопарке много редких животных.",
+          french: "Il y a beaucoup d'animaux rares au zoo.",
+          words: [
+            { word: "зоопарке", translation: "zoo", type: "nom" },
+            { word: "много", translation: "beaucoup", type: "adverbe" },
+            { word: "редких", translation: "rares", type: "adjectif" },
+            { word: "животных", translation: "animaux", type: "nom" }
+          ]
+        },
+        {
+          russian: "Мари удивлена разнообразием.",
+          french: "Marie est surprise par la diversité.",
+          words: [
+            { word: "Мари", translation: "Marie", type: "nom" },
+            { word: "удивлена", translation: "est surprise", type: "verbe" },
+            { word: "разнообразием", translation: "diversité", type: "nom" }
+          ]
+        },
+        {
+          russian: "Жан и Мари продолжают учить русский язык в путешествии.",
+          french: "Jean et Marie continuent à apprendre le russe pendant le voyage.",
+          words: [
+            { word: "Жан", translation: "Jean", type: "nom" },
+            { word: "Мари", translation: "Marie", type: "nom" },
+            { word: "продолжают", translation: "continuent", type: "verbe" },
+            { word: "учить", translation: "apprendre", type: "verbe" },
+            { word: "русский", translation: "russe", type: "adjectif" },
+            { word: "язык", translation: "langue", type: "nom" },
+            { word: "путешествии", translation: "voyage", type: "nom" }
+          ]
+        },
+        {
+          russian: "Они говорят с местными жителями, задают вопросы и делают заметки.",
+          french: "Ils parlent avec les habitants, posent des questions et prennent des notes.",
+          words: [
+            { word: "Они", translation: "Ils", type: "pronom" },
+            { word: "говорят", translation: "parlent", type: "verbe" },
+            { word: "местными", translation: "locaux", type: "adjectif" },
+            { word: "жителями", translation: "habitants", type: "nom" },
+            { word: "задают", translation: "posent", type: "verbe" },
+            { word: "вопросы", translation: "questions", type: "nom" },
+            { word: "делают", translation: "font", type: "verbe" },
+            { word: "заметки", translation: "notes", type: "nom" }
+          ]
+        },
+        {
+          russian: "Путешествие в Россию снова удивительное.",
+          french: "Le voyage en Russie est à nouveau étonnant.",
+          words: [
+            { word: "Путешествие", translation: "Voyage", type: "nom" },
+            { word: "Россию", translation: "Russie", type: "nom" },
+            { word: "снова", translation: "à nouveau", type: "advérbe" },
+            { word: "удивительное", translation: "étonnant", type: "adjectif" }
+          ]
+        },
+        {
+          russian: "Они возвращаются в Париж с новыми историями и впечатлениями.",
+          french: "Ils rentrent à Paris avec de nouvelles histoires et impressions.",
+          words: [
+            { word: "Они", translation: "Ils", type: "pronom" },
+            { word: "возвращаются", translation: "rentrent", type: "verbe" },
+            { word: "Париж", translation: "Paris", type: "nom" },
+            { word: "новыми", translation: "nouvelles", type: "adjectif" },
+            { word: "историями", translation: "histoires", type: "nom" },
+            { word: "впечатлениями", translation: "impressions", type: "nom" }
+          ]
+        },
+        {
+          russian: "Жан говорит: «Это путешествие — лучшее приключение», а Мари добавляет: «Мы обязательно вернёмся».",
+          french: "Jean dit : «Ce voyage est la meilleure aventure», et Marie ajoute : «Nous reviendrons certainement».",
+          words: [
+            { word: "Жан", translation: "Jean", type: "nom" },
+            { word: "говорит", translation: "dit", type: "verbe" },
+            { word: "путешествие", translation: "voyage", type: "nom" },
+            { word: "лучшее", translation: "meilleure", type: "adjectif" },
+            { word: "приключение", translation: "aventure", type: "nom" },
+            { word: "Мари", translation: "Marie", type: "nom" },
+            { word: "добавляет", translation: "ajoute", type: "verbe" },
+            { word: "обязательно", translation: "certainement", type: "adverbe" },
+            { word: "вернёмся", translation: "reviendrons", type: "verbe" }
+          ]
+        }
+              ]
+            },
+            {
+              titleFrench: "Création d'un club de langue",
+              titleRussian: "Создание языкового клуба",
+              phrases: [
+                {
+          russian: "После возвращения из России, Жан и Мари думают о том, как они могут использовать свои новые знания.",
+          french: "Après être revenus de Russie, Jean et Marie réfléchissent à comment utiliser leurs nouvelles connaissances.",
+          words: [
+            { word: "после", translation: "après", type: "préposition" },
+            { word: "возвращения", translation: "retour", type: "nom" },
+            { word: "из", translation: "de", type: "préposition" },
+            { word: "России", translation: "Russie", type: "nom propre" },
+            { word: "думают", translation: "pensent", type: "verbe" },
+            { word: "о том", translation: "à ce", type: "préposition" },
+            { word: "могут", translation: "peuvent", type: "verbe" },
+            { word: "использовать", translation: "utiliser", type: "verbe" },
+            { word: "свои", translation: "leurs", type: "pronom possessif" },
+            { word: "новые", translation: "nouveaux", type: "adjectif" },
+            { word: "знания", translation: "connaissances", type: "nom" }
+          ]
+        },
+        {
+          russian: "Жан предлагает: «Мы можем создать клуб для изучающих язык здесь, в Париже».",
+          french: "Jean propose : «Nous pouvons créer un club pour les apprenants de langue ici à Paris».",
+          words: [
+            { word: "Жан", translation: "Jean", type: "nom propre" },
+            { word: "предлагает", translation: "propose", type: "verbe" },
+            { word: "мы", translation: "nous", type: "pronom personnel" },
+            { word: "можем", translation: "pouvons", type: "verbe" },
+            { word: "создать", translation: "créer", type: "verbe" },
+            { word: "клуб", translation: "club", type: "nom" },
+            { word: "изучающих", translation: "apprenants", type: "adjectif" },
+            { word: "язык", translation: "langue", type: "nom" },
+            { word: "здесь", translation: "ici", type: "adverbe" },
+            { word: "в", translation: "à", type: "préposition" },
+            { word: "Париже", translation: "Paris", type: "nom propre" }
+          ]
+        },
+        {
+          russian: "Мари соглашается.",
+          french: "Marie est d'accord.",
+          words: [
+            { word: "Мари", translation: "Marie", type: "nom propre" },
+            { word: "соглашается", translation: "est d'accord", type: "verbe" }
+          ]
+        },
+        {
+          russian: "Они ищут место для встреч и находят уютное кафе в центре города.",
+          french: "Ils cherchent un lieu de rencontre et trouvent un café convivial en centre-ville.",
+          words: [
+            { word: "они", translation: "ils", type: "pronom personnel" },
+            { word: "ищут", translation: "cherchent", type: "verbe" },
+            { word: "место", translation: "lieu", type: "nom" },
+            { word: "для", translation: "pour", type: "préposition" },
+            { word: "встреч", translation: "rencontre", type: "nom" },
+            { word: "находят", translation: "trouvent", type: "verbe" },
+            { word: "уютное", translation: "confortable", type: "adjectif" },
+            { word: "кафе", translation: "café", type: "nom" },
+            { word: "в центре", translation: "au centre", type: "expression prépositionnelle" },
+            { word: "города", translation: "ville", type: "nom" }
+          ]
+        },
+        {
+          russian: "Владелец кафе, господин Лоран, поддерживает их идею и говорит: «Ваш клуб — отличное дополнение для нашего кафе».",
+          french: "Le propriétaire du café, Monsieur Laurent, soutient leur idée et dit : «Votre club est un excellent complément pour notre café».",
+          words: [
+            { word: "владелец", translation: "propriétaire", type: "nom" },
+            { word: "кафе", translation: "café", type: "nom" },
+            { word: "господин", translation: "monsieur", type: "nom" },
+            { word: "Лоран", translation: "Laurent", type: "nom propre" },
+            { word: "поддерживает", translation: "soutient", type: "verbe" },
+            { word: "их", translation: "leur", type: "pronom possessif" },
+            { word: "идею", translation: "idée", type: "nom" },
+            { word: "говорит", translation: "dit", type: "verbe" },
+            { word: "ваш", translation: "votre", type: "pronom possessif" },
+            { word: "клуб", translation: "club", type: "nom" },
+            { word: "отличное", translation: "excellent", type: "adjectif" },
+            { word: "дополнение", translation: "complément", type: "nom" },
+            { word: "для", translation: "pour", type: "préposition" },
+            { word: "нашего", translation: "notre", type: "pronom possessif" }
+          ]
+        },
+        {
+          russian: "Каждый четверг Жан и Мари проводят встречи клуба.",
+          french: "Chaque jeudi, Jean et Marie organisent des rencontres pour le club.",
+          words: [
+            { word: "Каждый", translation: "chaque", type: "adjectif" },
+            { word: "четверг", translation: "jeudi", type: "nom" },
+            { word: "Жан", translation: "Jean", type: "nom propre" },
+            { word: "Мари", translation: "Marie", type: "nom propre" },
+            { word: "проводят", translation: "organisent", type: "verbe" },
+            { word: "встречи", translation: "rencontres", type: "nom" },
+            { word: "клуба", translation: "du club", type: "nom" }
+          ]
+        },
+        {
+          russian: "Люди из разных стран приходят, чтобы учить русский язык и делиться опытом.",
+          french: "Des gens de différents pays viennent pour apprendre le russe et partager leurs expériences.",
+          words: [
+            { word: "люди", translation: "gens", type: "nom" },
+            { word: "из", translation: "de", type: "préposition" },
+            { word: "разных", translation: "différents", type: "adjectif" },
+            { word: "стран", translation: "pays", type: "nom" },
+            { word: "приходят", translation: "viennent", type: "verbe" },
+            { word: "чтобы", translation: "pour", type: "conjonction" },
+            { word: "учить", translation: "apprendre", type: "verbe" },
+            { word: "русский", translation: "russe", type: "adjectif" },
+            { word: "язык", translation: "langue", type: "nom" },
+            { word: "делиться", translation: "partager", type: "verbe" },
+            { word: "опытом", translation: "expériences", type: "nom" }
+          ]
+        },
+        {
+          russian: "Атмосфера дружелюбная, и все помогают друг другу.",
+          french: "L'atmosphère est conviviale, et tout le monde s'entraide.",
+          words: [
+            { word: "атмосфера", translation: "l'atmosphère", type: "nom" },
+            { word: "дружелюбная", translation: "conviviale", type: "adjectif" },
+            { word: "и", translation: "et", type: "conjonction" },
+            { word: "все", translation: "tout le monde", type: "pronom" },
+            { word: "помогают", translation: "s'entraident", type: "verbe" },
+            { word: "друг", translation: "les uns", type: "pronom" },
+            { word: "другу", translation: "les autres", type: "pronom" }
+          ]
+        },
+        {
+          russian: "Мари организует тематические вечера.",
+          french: "Marie organise des soirées à thème.",
+          words: [
+            { word: "Мари", translation: "Marie", type: "nom propre" },
+            { word: "организует", translation: "organise", type: "verbe" },
+            { word: "тематические", translation: "à thème", type: "adjectif" },
+            { word: "вечера", translation: "soirées", type: "nom" }
+          ]
+        },
+        {
+          russian: "Однажды это вечер русского кино, другой раз — вечер музыки или литературы.",
+          french: "Un jour, c'est une soirée de cinéma russe, un autre jour, une soirée de musique ou de littérature.",
+          words: [
+            { word: "однажды", translation: "un jour", type: "adverbe" },
+            { word: "вечер", translation: "soirée", type: "nom" },
+            { word: "русского", translation: "russe", type: "adjectif" },
+            { word: "кино", translation: "cinéma", type: "nom" },
+            { word: "другой", translation: "un autre", type: "adjectif" },
+            { word: "раз", translation: "jour", type: "nom" },
+            { word: "музыки", translation: "musique", type: "nom" },
+            { word: "литературы", translation: "littérature", type: "nom" }
+          ]
+        },
+        {
+          russian: "Жан готовит интересные материалы и делает викторины.",
+          french: "Jean prépare des documents intéressants et fait des quiz.",
+          words: [
+            { word: "Жан", translation: "Jean", type: "nom propre" },
+            { word: "готовит", translation: "prépare", type: "verbe" },
+            { word: "интересные", translation: "intéressants", type: "adjectif" },
+            { word: "материалы", translation: "documents", type: "nom" },
+            { word: "делает", translation: "fait", type: "verbe" },
+            { word: "викторины", translation: "quiz", type: "nom" }
+          ]
+        },
+                {
+          russian: "Алексей тоже приходит в клуб и помогает новичкам.",
+          french: "Alexei vient aussi au club et aide les débutants.",
+          words: [
+            { word: "Алексей", translation: "Alexei", type: "nom propre" },
+            { word: "тоже", translation: "aussi", type: "adverbe" },
+            { word: "приходит", translation: "vient", type: "verbe" },
+            { word: "в", translation: "au", type: "préposition" },
+            { word: "клуб", translation: "club", type: "nom commun" },
+            { word: "и", translation: "et", type: "conjonction" },
+            { word: "помогает", translation: "aide", type: "verbe" },
+            { word: "новичкам", translation: "débutants", type: "nom commun" }
+          ]
+        },
+        {
+          russian: "Он рассказывает о жизни в России и делится личными историями.",
+          french: "Il parle de la vie en Russie et partage des histoires personnelles.",
+          words: [
+            { word: "Он", translation: "Il", type: "pronom" },
+            { word: "рассказывает", translation: "parle", type: "verbe" },
+            { word: "о", translation: "de", type: "préposition" },
+            { word: "жизни", translation: "vie", type: "nom commun" },
+            { word: "в", translation: "en", type: "préposition" },
+            { word: "России", translation: "Russie", type: "nom propre" },
+            { word: "и", translation: "et", type: "conjonction" },
+            { word: "делится", translation: "partage", type: "verbe" },
+            { word: "личными", translation: "personnelles", type: "adjectif" },
+            { word: "историями", translation: "histoires", type: "nom commun" }
+          ]
+        },
+        {
+          russian: "Участники клуба ценят его помощь и вдохновение.",
+          french: "Les membres du club apprécient son aide et son inspiration.",
+          words: [
+            { word: "Участники", translation: "membres", type: "nom commun" },
+            { word: "клуба", translation: "club", type: "nom commun" },
+            { word: "ценят", translation: "apprécient", type: "verbe" },
+            { word: "его", translation: "son", type: "pronom possessif" },
+            { word: "помощь", translation: "aide", type: "nom commun" },
+            { word: "и", translation: "et", type: "conjonction" },
+            { word: "вдохновение", translation: "inspiration", type: "nom commun" }
+          ]
+        },
+        {
+          russian: "Со временем клуб становится популярным, и русский культурный центр в Париже узнает о них.",
+          french: "Avec le temps, le club devient populaire, et le centre culturel russe à Paris entend parler d'eux.",
+          words: [
+            { word: "Со временем", translation: "Avec le temps", type: "phrase adverbiale" },
+            { word: "клуб", translation: "club", type: "nom commun" },
+            { word: "становится", translation: "devient", type: "verbe" },
+            { word: "популярным", translation: "populaire", type: "adjectif" },
+            { word: "и", translation: "et", type: "conjonction" },
+            { word: "русский", translation: "russe", type: "adjectif" },
+            { word: "культурный", translation: "culturel", type: "adjectif" },
+            { word: "центр", translation: "centre", type: "nom commun" },
+            { word: "в", translation: "à", type: "préposition" },
+            { word: "Париже", translation: "Paris", type: "nom propre" },
+            { word: "узнает", translation: "entend parler", type: "verbe" },
+            { word: "о", translation: "de", type: "préposition" },
+            { word: "них", translation: "eux", type: "pronom" }
+          ]
+        },
+        {
+          russian: "Они предлагают сотрудничество.",
+          french: "Ils proposent une collaboration.",
+          words: [
+            { word: "Они", translation: "Ils", type: "pronom" },
+            { word: "предлагают", translation: "proposent", type: "verbe" },
+            { word: "сотрудничество", translation: "collaboration", type: "nom commun" }
+          ]
+        },
+        {
+          russian: "Жан и Мари рады этому и открывают новые возможности для клуба.",
+          french: "Jean et Marie en sont heureux et ouvrent de nouvelles opportunités pour le club.",
+          words: [
+            { word: "Жан", translation: "Jean", type: "nom propre" },
+            { word: "и", translation: "et", type: "conjonction" },
+            { word: "Мари", translation: "Marie", type: "nom propre" },
+            { word: "рады", translation: "heureux", type: "adjectif" },
+            { word: "этому", translation: "en", type: "pronom" },
+            { word: "и", translation: "et", type: "conjonction" },
+            { word: "открывают", translation: "ouvrent", type: "verbe" },
+            { word: "новые", translation: "nouvelles", type: "adjectif" },
+            { word: "возможности", translation: "opportunités", type: "nom commun" },
+            { word: "для", translation: "pour", type: "préposition" },
+            { word: "клуба", translation: "club", type: "nom commun" }
+          ]
+        },
+        {
+          russian: "Клуб становится не только местом учить язык, но и местом для культурного обмена.",
+          french: "Le club devient non seulement un lieu pour apprendre la langue, mais aussi pour l'échange culturel.",
+          words: [
+            { word: "Клуб", translation: "Le club", type: "nom commun" },
+            { word: "становится", translation: "devient", type: "verbe" },
+            { word: "не", translation: "non", type: "adverbe" },
+            { word: "только", translation: "seulement", type: "adverbe" },
+            { word: "местом", translation: "un lieu", type: "nom commun" },
+            { word: "учить", translation: "apprendre", type: "verbe" },
+            { word: "язык", translation: "la langue", type: "nom commun" },
+            { word: "но", translation: "mais", type: "conjonction" },
+            { word: "и", translation: "aussi", type: "adverbe" },
+            { word: "местом", translation: "un lieu", type: "nom commun" },
+            { word: "для", translation: "pour", type: "préposition" },
+            { word: "культурного", translation: "culturel", type: "adjectif" },
+            { word: "обмена", translation: "échange", type: "nom commun" }
+          ]
+        },
+        {
+          russian: "Жан и Мари гордятся своим проектом и тем, что их любовь к русскому языку и культуре интересна многим людям.",
+          french: "Jean et Marie sont fiers de leur projet et du fait que leur amour pour la langue et la culture russes intéresse beaucoup de monde.",
+          words: [
+            { word: "Жан", translation: "Jean", type: "nom propre" },
+            { word: "и", translation: "et", type: "conjonction" },
+            { word: "Мари", translation: "Marie", type: "nom propre" },
+            { word: "гордятся", translation: "sont fiers", type: "verbe" },
+            { word: "своим", translation: "leur", type: "pronom possessif" },
+            { word: "проектом", translation: "projet", type: "nom commun" },
+            { word: "и", translation: "et", type: "conjonction" },
+            { word: "тем", translation: "du fait", type: "expression" },
+            { word: "что", translation: "que", type: "conjonction" },
+            { word: "их", translation: "leur", type: "pronom possessif" },
+            { word: "любовь", translation: "amour", type: "nom commun" },
+            { word: "к", translation: "pour", type: "préposition" },
+            { word: "русскому", translation: "russe", type: "adjectif" },
+            { word: "языку", translation: "langue", type: "nom commun" },
+            { word: "и", translation: "et", type: "conjonction" },
+            { word: "культуре", translation: "culture", type: "nom commun" },
+            { word: "интересна", translation: "intéresse", type: "verbe" },
+            { word: "многим", translation: "beaucoup", type: "adverbe" },
+            { word: "людям", translation: "de monde", type: "nom commun" }
+          ]
+        },
+        {
+          russian: "Так, их путешествие в Россию становится полезным проектом дома.",
+          french: "Ainsi, leur voyage en Russie devient un projet utile à la maison.",
+          words: [
+            { word: "Так", translation: "Ainsi", type: "adverbe" },
+            { word: "их", translation: "leur", type: "pronom possessif" },
+            { word: "путешествие", translation: "voyage", type: "nom commun" },
+            { word: "в", translation: "en", type: "préposition" },
+            { word: "Россию", translation: "Russie", type: "nom propre" },
+            { word: "становится", translation: "devient", type: "verbe" },
+            { word: "полезным", translation: "utile", type: "adjectif" },
+            { word: "проектом", translation: "projet", type: "nom commun" },
+            { word: "дома", translation: "à la maison", type: "adverbe" }
+          ]
+        }
+              ]
+            },
+            {
+              titleFrench: "Reconnaissance internationale",
+              titleRussian: "Международное признание",
+              phrases: [
+                {
+          russian: "Клуб Жана и Мари становится популярным, и их приглашают на форум по изучению языков в Париже.",
+          french: "Le club de Jean et Marie devient populaire et ils sont invités à un forum sur l'apprentissage des langues à Paris.",
+          words: [
+            { word: "Клуб", translation: "club", type: "nom commun" },
+            { word: "становится", translation: "devient", type: "verbe" },
+            { word: "популярным", translation: "populaire", type: "adjectif" },
+            { word: "приглашают", translation: "invités", type: "verbe" },
+            { word: "форум", translation: "forum", type: "nom commun" },
+            { word: "изучению", translation: "apprentissage", type: "nom commun" },
+            { word: "языков", translation: "langues", type: "nom commun" },
+            { word: "Париже", translation: "Paris", type: "nom propre" },
+          ],
+        },
+        {
+          russian: "Они готовят рассказ о своём клубе и об учёбе русского языка.",
+          french: "Ils préparent une présentation sur leur club et l'apprentissage du russe.",
+          words: [
+            { word: "готовят", translation: "préparent", type: "verbe" },
+            { word: "рассказ", translation: "présentation", type: "nom commun" },
+            { word: "клубе", translation: "club", type: "nom commun" },
+            { word: "учёбе", translation: "apprentissage", type: "nom commun" },
+            { word: "русского", translation: "russe", type: "adjectif" },
+            { word: "языка", translation: "langue", type: "nom commun" },
+          ],
+        },
+        {
+          russian: "На форуме много людей из разных стран.",
+          french: "Il y a beaucoup de gens de différents pays au forum.",
+          words: [
+            { word: "форуме", translation: "forum", type: "nom commun" },
+            { word: "много", translation: "beaucoup", type: "adverbe" },
+            { word: "людей", translation: "gens", type: "nom commun" },
+            { word: "разных", translation: "différents", type: "adjectif" },
+            { word: "стран", translation: "pays", type: "nom commun" },
+          ],
+        },
+        {
+          russian: "Жан и Мари рассказывают о своих путешествиях и о встречах в клубе.",
+          french: "Jean et Marie parlent de leurs voyages et des rencontres au club.",
+          words: [
+            { word: "рассказывают", translation: "parlent", type: "verbe" },
+            { word: "путешествиях", translation: "voyages", type: "nom commun" },
+            { word: "встречах", translation: "rencontres", type: "nom commun" },
+            { word: "клубе", translation: "club", type: "nom commun" },
+          ],
+        },
+        {
+          russian: "Публика слушает с интересом.",
+          french: "Le public écoute avec intérêt.",
+          words: [
+            { word: "публика", translation: "public", type: "nom commun" },
+            { word: "слушает", translation: "écoute", type: "verbe" },
+            { word: "интересом", translation: "intérêt", type: "nom commun" },
+          ],
+        },
+        {
+          russian: "После выступления их спрашивают о многом и делают предложения.",
+          french: "Après la présentation, on leur pose de nombreuses questions et on leur fait des propositions.",
+          words: [
+            { word: "выступления", translation: "présentation", type: "nom commun" },
+            { word: "спрашивают", translation: "pose", type: "verbe" },
+            { word: "многом", translation: "nombreuses", type: "adjectif" },
+            { word: "делают", translation: "font", type: "verbe" },
+            { word: "предложения", translation: "propositions", type: "nom commun" },
+          ],
+        },
+        {
+          russian: "Некоторые участники форума хотят создать такие же клубы в своих городах.",
+          french: "Certains participants du forum veulent créer de tels clubs dans leurs propres villes.",
+          words: [
+            { word: "некоторые", translation: "certains", type: "adjectif" },
+            { word: "участники", translation: "participants", type: "nom commun" },
+            { word: "форума", translation: "forum", type: "nom commun" },
+            { word: "хотят", translation: "veulent", type: "verbe" },
+            { word: "создать", translation: "créer", type: "verbe" },
+            { word: "такие", translation: "tels", type: "adjectif" },
+            { word: "клубы", translation: "clubs", type: "nom commun" },
+            { word: "городах", translation: "villes", type: "nom commun" },
+          ],
+        },
+        {
+          russian: "Жан говорит: «Это отличная идея! Мы можем помочь вам с организацией».",
+          french: "Jean dit : «C'est une excellente idée ! Nous pouvons vous aider à organiser cela».",
+          words: [
+            { word: "говорит", translation: "dit", type: "verbe" },
+            { word: "отличная", translation: "excellente", type: "adjectif" },
+            { word: "идея", translation: "idée", type: "nom commun" },
+            { word: "можем", translation: "pouvons", type: "verbe" },
+            { word: "помочь", translation: "aider", type: "verbe" },
+            { word: "организацией", translation: "organisation", type: "nom commun" },
+          ],
+        },
+        {
+          russian: "Мари обменивается контактами и обещает поддержку.",
+          french: "Marie échange des contacts et promet son soutien.",
+          words: [
+            { word: "обменивается", translation: "échange", type: "verbe" },
+            { word: "контактами", translation: "contacts", type: "nom commun" },
+            { word: "обещает", translation: "promet", type: "verbe" },
+            { word: "поддержку", translation: "soutien", type: "nom commun" },
+          ],
+        },
+        {
+          russian: "Позже, они получают признание за вклад в культурный обмен.",
+          french: "Plus tard, ils reçoivent une reconnaissance pour leur contribution à l'échange culturel.",
+          words: [
+            { word: "позже", translation: "plus tard", type: "adverbe" },
+            { word: "получают", translation: "reçoivent", type: "verbe" },
+            { word: "признание", translation: "reconnaissance", type: "nom commun" },
+            { word: "вклад", translation: "contribution", type: "nom commun" },
+            { word: "культурный", translation: "culturel", type: "adjectif" },
+            { word: "обмен", translation: "échange", type: "nom commun" },
+          ],
+        },
+                {
+          russian: "Их клуб известен не только в Париже, но и за его пределами.",
+          french: "Leur club est connu non seulement à Paris, mais aussi au-delà.",
+          words: [
+            { word: "их", translation: "leur", type: "pronom" },
+            { word: "клуб", translation: "club", type: "nom" },
+            { word: "известен", translation: "connu", type: "adjectif" },
+            { word: "не", translation: "pas", type: "adverbe" },
+            { word: "только", translation: "seulement", type: "adverbe" },
+            { word: "в", translation: "à", type: "préposition" },
+            { word: "Париже", translation: "Paris", type: "nom propre" },
+            { word: "но", translation: "mais", type: "conjonction" },
+            { word: "и", translation: "et", type: "conjonction" },
+            { word: "за", translation: "au-delà", type: "préposition" },
+            { word: "его", translation: "son", type: "pronom" },
+            { word: "пределами", translation: "limites", type: "nom" }
+          ]
+        },
+        {
+          russian: "Жан и Мари счастливы, что их эксперименты успешны.",
+          french: "Jean et Marie sont heureux que leurs expériences soient un succès.",
+          words: [
+            { word: "Жан", translation: "Jean", type: "nom propre" },
+            { word: "и", translation: "et", type: "conjonction" },
+            { word: "Мари", translation: "Marie", type: "nom propre" },
+            { word: "счастливы", translation: "heureux", type: "adjectif" },
+            { word: "что", translation: "que", type: "conjonction" },
+            { word: "их", translation: "leurs", type: "pronom" },
+            { word: "эксперименты", translation: "expériences", type: "nom" },
+            { word: "успешны", translation: "succès", type: "adjectif" }
+          ]
+        },
+        {
+          russian: "Алексей поздравляет их и говорит: «Ваш интерес стал международным проектом. Это большое достижение!»",
+          french: "Alexei les félicite et dit : «Votre intérêt est devenu un projet international. C'est un grand accomplissement !»",
+          words: [
+            { word: "Алексей", translation: "Alexei", type: "nom propre" },
+            { word: "поздравляет", translation: "félicite", type: "verbe" },
+            { word: "их", translation: "les", type: "pronom" },
+            { word: "и", translation: "et", type: "conjonction" },
+            { word: "говорит", translation: "dit", type: "verbe" },
+            { word: "ваш", translation: "votre", type: "pronom" },
+            { word: "интерес", translation: "intérêt", type: "nom" },
+            { word: "стал", translation: "est devenu", type: "verbe" },
+            { word: "международным", translation: "international", type: "adjectif" },
+            { word: "проектом", translation: "projet", type: "nom" },
+            { word: "это", translation: "c'est", type: "pronom" },
+            { word: "большое", translation: "grand", type: "adjectif" },
+            { word: "достижение", translation: "accomplissement", type: "nom" }
+          ]
+        },
+        {
+          russian: "Вечером, возвращаясь домой, они думают, как многое они сделали с тех пор, как начали учить русский язык.",
+          french: "Dans la soirée, en rentrant chez eux, ils pensent à tout ce qu'ils ont accompli depuis qu'ils ont commencé à apprendre le russe.",
+          words: [
+            { word: "вечером", translation: "soirée", type: "nom" },
+            { word: "возвращаясь", translation: "en rentrant", type: "verbe" },
+            { word: "домой", translation: "chez eux", type: "adverbe" },
+            { word: "они", translation: "ils", type: "pronom" },
+            { word: "думают", translation: "pensent", type: "verbe" },
+            { word: "как", translation: "à tout ce que", type: "conjonction" },
+            { word: "многое", translation: "tant", type: "adverbe" },
+            { word: "они", translation: "ils", type: "pronom" },
+            { word: "сделали", translation: "ont accompli", type: "verbe" },
+            { word: "с", translation: "depuis", type: "préposition" },
+            { word: "тех пор", translation: "alors", type: "adverbe" },
+            { word: "как", translation: "que", type: "conjonction" },
+            { word: "начали", translation: "ont commencé", type: "verbe" },
+            { word: "учить", translation: "apprendre", type: "verbe" },
+            { word: "русский", translation: "russe", type: "adjectif" },
+            { word: "язык", translation: "langue", type: "nom" }
+          ]
+        },
+        {
+          russian: "Жан говорит: «Мы не только выучили язык, но и обрели новых друзей и сделали что-то значительное».",
+          french: "Jean dit : «Nous avons non seulement appris la langue, mais nous avons aussi trouvé de nouveaux amis et réalisé quelque chose d'important».",
+          words: [
+            { word: "Жан", translation: "Jean", type: "nom propre" },
+            { word: "говорит", translation: "dit", type: "verbe" },
+            { word: "мы", translation: "nous", type: "pronom" },
+            { word: "не", translation: "pas", type: "adverbe" },
+            { word: "только", translation: "seulement", type: "adverbe" },
+            { word: "выучили", translation: "avons appris", type: "verbe" },
+            { word: "язык", translation: "langue", type: "nom" },
+            { word: "но", translation: "mais", type: "conjonction" },
+            { word: "обрели", translation: "avons trouvé", type: "verbe" },
+            { word: "новых", translation: "nouveaux", type: "adjectif" },
+            { word: "друзей", translation: "amis", type: "nom" },
+            { word: "и", translation: "et", type: "conjonction" },
+            { word: "сделали", translation: "avons réalisé", type: "verbe" },
+            { word: "что-то", translation: "quelque chose", type: "pronom" },
+            { word: "значительное", translation: "d'important", type: "adjectif" }
+          ]
+        },
+        {
+          russian: "Мари добавляет: «Каждый маленький шаг привёл нас к большим переменам. Это невероятное путешествие».",
+          french: "Marie ajoute : «Chaque petit pas nous a menés à de grands changements. C'est un voyage incroyable».",
+          words: [
+            { word: "Мари", translation: "Marie", type: "nom propre" },
+            { word: "добавляет", translation: "ajoute", type: "verbe" },
+            { word: "каждый", translation: "chaque", type: "adjectif" },
+            { word: "маленький", translation: "petit", type: "adjectif" },
+            { word: "шаг", translation: "pas", type: "nom" },
+            { word: "привёл", translation: "a mené", type: "verbe" },
+            { word: "нас", translation: "nous", type: "pronom" },
+            { word: "к", translation: "à", type: "préposition" },
+            { word: "большим", translation: "grands", type: "adjectif" },
+            { word: "переменам", translation: "changements", type: "nom" },
+            { word: "это", translation: "c'est", type: "pronom" },
+            { word: "невероятное", translation: "incroyable", type: "adjectif" },
+            { word: "путешествие", translation: "voyage", type: "nom" }
+          ]
+        },
+        {
+          russian: "Они знают, что их путь в изучении языков и культур только начинается.",
+          french: "Ils savent que leur parcours dans l'apprentissage des langues et des cultures ne fait que commencer.",
+          words: [
+            { word: "они", translation: "ils", type: "pronom" },
+            { word: "знают", translation: "savent", type: "verbe" },
+            { word: "что", translation: "que", type: "conjonction" },
+            { word: "их", translation: "leur", type: "pronom" },
+            { word: "путь", translation: "parcours", type: "nom" },
+            { word: "в", translation: "dans", type: "préposition" },
+            { word: "изучении", translation: "apprentissage", type: "nom" },
+            { word: "языков", translation: "langues", type: "nom" },
+            { word: "и", translation: "et", type: "conjonction" },
+            { word: "культур", translation: "cultures", type: "nom" },
+            { word: "только", translation: "seulement", type: "adverbe" },
+            { word: "начинается", translation: "commence", type: "verbe" }
+          ]
+        },
+        {
+          russian: "Жан и Мари полны энтузиазма и планируют продолжать свою работу.",
+          french: "Jean et Marie sont pleins d'enthousiasme et prévoient de poursuivre leur travail.",
+          words: [
+            { word: "Жан", translation: "Jean", type: "nom propre" },
+            { word: "и", translation: "et", type: "conjonction" },
+            { word: "Мари", translation: "Marie", type: "nom propre" },
+            { word: "полны", translation: "pleins", type: "adjectif" },
+            { word: "энтузиазма", translation: "enthousiasme", type: "nom" },
+            { word: "и", translation: "et", type: "conjonction" },
+            { word: "планируют", translation: "prévoient", type: "verbe" },
+            { word: "продолжать", translation: "poursuivre", type: "verbe" },
+            { word: "свою", translation: "leur", type: "pronom" },
+            { word: "работу", translation: "travail", type: "nom" }
+          ]
+        },
+        {
+          russian: "Их история доказывает, что любовь к языку может открыть двери к новым мирам и возможностям.",
+          french: "Leur histoire prouve que l'amour de la langue peut ouvrir des portes vers de nouveaux mondes et opportunités.",
+          words: [
+            { word: "их", translation: "leur", type: "pronom" },
+            { word: "история", translation: "histoire", type: "nom" },
+            { word: "доказывает", translation: "prouve", type: "verbe" },
+            { word: "что", translation: "que", type: "conjonction" },
+            { word: "любовь", translation: "l'amour", type: "nom" },
+            { word: "к", translation: "à", type: "préposition" },
+            { word: "языку", translation: "langue", type: "nom" },
+            { word: "может", translation: "peut", type: "verbe" },
+            { word: "открыть", translation: "ouvrir", type: "verbe" },
+            { word: "двери", translation: "portes", type: "nom" },
+            { word: "к", translation: "vers", type: "préposition" },
+            { word: "новым", translation: "nouveaux", type: "adjectif" },
+            { word: "мирам", translation: "mondes", type: "nom" },
+            { word: "и", translation: "et", type: "conjonction" },
+            { word: "возможностям", translation: "opportunités", type: "nom" }
+          ]
+        }
+              ]
+            }
+          ]
+        };
+
+        const chaptersElement = document.getElementById('chapters');
+
+        function createAudioButton(filePath, isSlow) {
+            const button = document.createElement('button');
+            button.textContent = '▶️' + (!isSlow ? '' : ' 🐢');
+            button.addEventListener('click', () => {
+                const audio = new Audio(filePath);
+                audio.playbackRate = !isSlow ? 1 : 0.5
+                audio.play();
+            });
+            return button;
+        }
+
+        function createPhraseElement(text, className, filePath) {
+            const phraseDiv = document.createElement('div');
+            phraseDiv.className = className;
+            phraseDiv.innerHTML = text;
+            phraseDiv.appendChild(createAudioButton(filePath));
+            phraseDiv.appendChild(createAudioButton(filePath, true));
+            return phraseDiv;
+        }
+
+        function extractCyrillic(text) {
+          const cyrillicOnly = text.match(/\p{sc=Cyrillic}+/gu);
+          return cyrillicOnly ? cyrillicOnly.join('') : '';
+        }
+
+        function stringToSpans(phrase, phraseIndex, chapterIndex) {
+          const words = phrase.split(' ');
+          const spanArray = words.map((word, wordIndex) => `<span class="s-word" id="${chapterIndex}-${phraseIndex}-${extractCyrillic(word)}">${word}</span>`);
+          return spanArray.join(' ');
+        }
+
+        const floatingDiv = document.getElementById('floatingDiv');
+
+        function onHover(event) {
+            var spanId = event.target.id;
+            var chapterIndex = spanId.split('-')[0];
+            var phraseIndex = spanId.split('-')[1];
+            var word = spanId.split('-')[2];
+            console.log(word);
+            var words = bookData.chapters[chapterIndex]['phrases'][phraseIndex]['words'];
+            var wordData = words.find(w => w.word.toLowerCase() === word.toLowerCase());
+            if (!wordData) {
+                return;
+            }
+
+            const mouseX = event.clientX + window.scrollX;
+            const mouseY = event.clientY + window.scrollY - 24;
+
+            // Position the floating div above the mouse pointer
+            floatingDiv.style.left = `${mouseX}px`;
+            floatingDiv.style.top = `${mouseY - 40}px`; // Adjust the offset as needed
+            floatingDiv.style.display = 'block';
+
+            // Optional: Set the text or content of the floatingDiv
+            floatingDiv.textContent = `${wordData.word}: ${wordData.translation} (${wordData.type})`;
+        }
+
+        bookData.chapters.forEach((chapter, chapterIndex) => {
+            const chapterDiv = document.createElement('div');
+            chapterDiv.className = 'chapitre';
+            const title = document.createElement('h2');
+            title.textContent = `${chapter.titleRussian} / ${chapter.titleFrench}`;
+            chapterDiv.appendChild(title);
+
+            chapter.phrases.forEach((phrase, phraseIndex) => {
+                const index = (phraseIndex + 1).toString().padStart(3, '0');
+
+                const russePath = `audio/chapter${chapterIndex + 1}/russian/${index}.mp3`;
+                const frenchPath = `audio/chapter${chapterIndex + 1}/french/${index}.mp3`;
+
+                const russePhrase = createPhraseElement(`${stringToSpans(phrase.russian, phraseIndex, chapterIndex)}`, 'phrase phrase--russe', russePath);
+                const frenchPhrase = createPhraseElement(`${phrase.french}`, 'phrase phrase--français', frenchPath);
+
+                chapterDiv.appendChild(russePhrase);
+                chapterDiv.appendChild(frenchPhrase);
+            });
+
+            chaptersElement.appendChild(chapterDiv);
+        });
+
+        var spans = document.querySelectorAll('.s-word');
+        spans.forEach((span) => span.addEventListener('mouseenter', onHover));
+
+    </script>
+
+</body>
+</html>
