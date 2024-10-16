@@ -1736,12 +1736,10 @@
             const mouseX = event.clientX + window.scrollX;
             const mouseY = event.clientY + window.scrollY - 24;
 
-            // Position the floating div above the mouse pointer
             floatingDiv.style.left = `${mouseX}px`;
             floatingDiv.style.top = `${mouseY - 40}px`; // Adjust the offset as needed
             floatingDiv.style.display = 'block';
 
-            // Optional: Set the text or content of the floatingDiv
             floatingDiv.textContent = `${wordData.word}: ${wordData.translation} (${wordData.type})`;
         }
 
